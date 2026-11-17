@@ -1,0 +1,34 @@
+    /* ---------------------------------------------------------------- */
+    /* Arithmetic (numeric types)                                       */
+    /* ---------------------------------------------------------------- */
+
+    /* Total of the known values; unknown elements are skipped. */
+    METHOD PUBLIC @TYPE@ Sum():
+        DEFINE VARIABLE xTotal AS @TYPE@  NO-UNDO INITIAL 0.
+        DEFINE VARIABLE xItem  AS @TYPE@  NO-UNDO.
+        DEFINE VARIABLE i      AS INTEGER NO-UNDO.
+
+        DO i = 1 TO iLen:
+            xItem = oStore:GetAt(iStart + i - 1).
+            IF xItem <> ? THEN xTotal = xTotal + xItem.
+        END.
+        RETURN xTotal.
+    END METHOD.
+
+    /* Mean of the known values; ? when there are none. */
+    METHOD PUBLIC DECIMAL Average():
+        DEFINE VARIABLE dTotal AS DECIMAL NO-UNDO.
+        DEFINE VARIABLE iKnown AS INTEGER NO-UNDO.
+        DEFINE VARIABLE xItem  AS @TYPE@  NO-UNDO.
+        DEFINE VARIABLE i      AS INTEGER NO-UNDO.
+
+        DO i = 1 TO iLen:
+            xItem = oStore:GetAt(iStart + i - 1).
+            IF xItem = ? THEN NEXT.
+            ASSIGN dTotal = dTotal + xItem
+                   iKnown = iKnown + 1.
+        END.
+        IF iKnown = 0 THEN RETURN ?.
+        RETURN dTotal / iKnown.
+    END METHOD.
+

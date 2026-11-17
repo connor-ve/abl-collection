@@ -33,6 +33,18 @@ _progres -b -p tools/test.p -errorstack -catchStop 1
 - [ ] `INTERVAL(NOW, dtzStart, "milliseconds")` with DATETIME-TZ on both sides.
 - [ ] `OS-CREATE-DIR` creates intermediate folders (`build/test-results/`). If not, create `build/` once by hand.
 
+## Collections
+
+- [ ] **The 28000-element limit is real** for indeterminate arrays. The storage design assumes it. If 11.7 allows larger arrays, the chunking still works; it's just more than needed.
+- [ ] `EXTENT(arr) = n` (EXTENT statement) fixes an indeterminate class member array (`RefArray`, the `*Chunk` classes, `ToArray`).
+- [ ] `DEFINE PUBLIC VARIABLE Items AS ... EXTENT` in a class, and writing one element from another object: `oChunk:Items[i] = x`.
+- [ ] Methods returning arrays: `METHOD PUBLIC CHARACTER EXTENT ToArray()`.
+- [ ] `DEFINE INPUT ... EXTENT` parameters on static methods (`FromArray`, `AppendArray`).
+- [ ] A temp-table defined in a class body after the variable definitions (`ttSort` in the sortable slices).
+- [ ] `INITIAL ["x", "y", "z"]` on an EXTENT 3 variable (tests).
+- [ ] `FOR EACH ttEntry USE-INDEX ixSeq` returns rows in `Seq` order (`Map:Keys`).
+- [ ] Rough speed check: 50000 appends in `TypedSliceTest:TestIntLargeSlice` should take well under a second. If it's slow, profile `GetAt`/`SetAt` first.
+
 ## Behaviour
 
 - [ ] An error thrown inside a `CATCH` block propagates out of the surrounding `DO ON ERROR UNDO, LEAVE`. The tests avoid relying on this by storing the caught error and checking it after the block.

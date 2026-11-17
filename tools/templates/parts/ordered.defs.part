@@ -1,0 +1,6 @@
+    /* Work table for Sort(). */
+    DEFINE PRIVATE TEMP-TABLE ttSort NO-UNDO
+        FIELD SortValue AS @TYPE@
+        FIELD Seq       AS INTEGER
+        INDEX ixValue SortValue Seq.
+

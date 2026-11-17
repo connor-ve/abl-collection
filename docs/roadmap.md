@@ -8,8 +8,9 @@
    - [x] Test framework: `TestCase`, `Expect`, runner, JUnit output
    - [ ] Compile and pass on a real 11.7 install (see compile-checklist.md)
 2. **Core**
-   - [ ] `Slice` types (Go-style: growable, sub-slices that share the backing array). Typed versions for CHARACTER, INT64, DECIMAL, LOGICAL, DATE and Object, generated from one template.
-   - [ ] `List`, `Map`, `Set`, `Stack`, `Queue` on top of slices
+   - [x] `Slice` types (Go-style: growable, sub-slices that share the backing array). Typed versions for CHARACTER, INT64, DECIMAL, LOGICAL, DATE and Object, generated from one template. Slices are the list type.
+   - [x] `Map`, `CharSet`/`IntSet`, `Stack`, `Queue`
+   - [ ] Later: make `Args` a `Map`, and add JSON conversion for `Map` and slices once the JSON step lands
    - [ ] Logging: levels, categories, outputs (file, LOG-MANAGER, stdout), JSON lines, request IDs
    - [ ] Timing: `Stopwatch`, named laps, a scope that logs on dispose
    - [ ] UUID v4 and v7 (time-ordered), hashing, Base64 wrappers

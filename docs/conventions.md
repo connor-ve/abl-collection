@@ -8,6 +8,10 @@ Rules for code in this library. They keep it compiling on 11.7, safe to drop int
 - No dependencies outside the OpenEdge runtime, `Progress.Json` and `Progress.Reflect`. `OpenEdge.Core` and `OpenEdge.Net` are allowed only in packages whose purpose needs them (the HTTP client), so the core stays light.
 - The code must work on Windows and Linux. For a backslash use `CHR(92)`, never `"\"`, because backslash is an escape character on Unix.
 
+## Generated files
+
+Files whose header says `GENERATED` (the typed slices, stores, chunks and sets in `abl.Collections`) come from `tools/templates`. Change the template or a part file, run `bash tools/gen-collections.sh`, and commit the template and the regenerated files together. Never fix a bug only in a generated file.
+
 ## Every file
 
 - Start with a header comment: file, purpose, usage example.

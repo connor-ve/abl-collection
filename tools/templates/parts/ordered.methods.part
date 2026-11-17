@@ -1,0 +1,71 @@
+    /* ---------------------------------------------------------------- */
+    /* Ordering (types that support < and >)                            */
+    /* ---------------------------------------------------------------- */
+
+    /* Sorts in place, ascending. Stable: equal values keep their order.
+       Text sorts case-insensitively. Unknown values sort together at
+       one end. On a view this reorders the shared storage. */
+    METHOD PUBLIC @NAME@Slice Sort():
+        RETURN SortBy(FALSE).
+    END METHOD.
+
+    METHOD PUBLIC @NAME@Slice SortDescending():
+        RETURN SortBy(TRUE).
+    END METHOD.
+
+    /* Smallest known value; ? when there is none. */
+    METHOD PUBLIC @TYPE@ Min():
+        DEFINE VARIABLE xBest AS @TYPE@  NO-UNDO INITIAL ?.
+        DEFINE VARIABLE xItem AS @TYPE@  NO-UNDO.
+        DEFINE VARIABLE i     AS INTEGER NO-UNDO.
+
+        DO i = 1 TO iLen:
+            xItem = oStore:GetAt(iStart + i - 1).
+            IF xItem = ? THEN NEXT.
+            IF xBest = ? THEN xBest = xItem.
+            ELSE IF xItem < xBest THEN xBest = xItem.
+        END.
+        RETURN xBest.
+    END METHOD.
+
+    /* Largest known value; ? when there is none. */
+    METHOD PUBLIC @TYPE@ Max():
+        DEFINE VARIABLE xBest AS @TYPE@  NO-UNDO INITIAL ?.
+        DEFINE VARIABLE xItem AS @TYPE@  NO-UNDO.
+        DEFINE VARIABLE i     AS INTEGER NO-UNDO.
+
+        DO i = 1 TO iLen:
+            xItem = oStore:GetAt(iStart + i - 1).
+            IF xItem = ? THEN NEXT.
+            IF xBest = ? THEN xBest = xItem.
+            ELSE IF xItem > xBest THEN xBest = xItem.
+        END.
+        RETURN xBest.
+    END METHOD.
+
+    METHOD PRIVATE @NAME@Slice SortBy(INPUT plDescending AS LOGICAL):
+        DEFINE VARIABLE i AS INTEGER NO-UNDO.
+
+        EMPTY TEMP-TABLE ttSort.
+        DO i = 1 TO iLen:
+            CREATE ttSort.
+            ASSIGN ttSort.SortValue = oStore:GetAt(iStart + i - 1)
+                   ttSort.Seq       = i.
+        END.
+
+        i = 0.
+        IF plDescending THEN
+            FOR EACH ttSort BY ttSort.SortValue DESCENDING BY ttSort.Seq:
+                i = i + 1.
+                oStore:SetAt(iStart + i - 1, ttSort.SortValue).
+            END.
+        ELSE
+            FOR EACH ttSort BY ttSort.SortValue BY ttSort.Seq:
+                i = i + 1.
+                oStore:SetAt(iStart + i - 1, ttSort.SortValue).
+            END.
+
+        EMPTY TEMP-TABLE ttSort.
+        RETURN THIS-OBJECT.
+    END METHOD.
+

@@ -1,0 +1,59 @@
+    /* ---------------------------------------------------------------- */
+    /* Delimited lists (CHARACTER only)                                 */
+    /* ---------------------------------------------------------------- */
+
+    /* "a,b,,c" -> a, b, "", c. Same splitting as ENTRY(), but one pass
+       instead of rescanning the list for every entry, and any delimiter
+       length works ("::", "~r~n"). An empty list gives an empty slice. */
+    METHOD PUBLIC STATIC @NAME@Slice FromList(INPUT plcList AS LONGCHAR, INPUT pcDelimiter AS CHARACTER):
+        DEFINE VARIABLE oOut   AS @NAME@Slice NO-UNDO.
+        DEFINE VARIABLE iPos   AS INT64       NO-UNDO INITIAL 1.
+        DEFINE VARIABLE iNext  AS INT64       NO-UNDO.
+        DEFINE VARIABLE iDelim AS INTEGER     NO-UNDO.
+        DEFINE VARIABLE cItem  AS CHARACTER   NO-UNDO.
+
+        oOut = NEW @NAME@Slice().
+        IF plcList = ? THEN RETURN oOut.
+        IF LENGTH(plcList) = 0 THEN RETURN oOut.
+        IF pcDelimiter = ? OR pcDelimiter = "" THEN pcDelimiter = ",".
+        iDelim = LENGTH(pcDelimiter).
+
+        DO WHILE TRUE:
+            iNext = INDEX(plcList, pcDelimiter, iPos).
+            IF iNext = 0 THEN DO:
+                cItem = SUBSTRING(plcList, iPos).
+                oOut:Append(cItem).
+                LEAVE.
+            END.
+            cItem = SUBSTRING(plcList, iPos, iNext - iPos).
+            oOut:Append(cItem).
+            iPos = iNext + iDelim.
+        END.
+
+        RETURN oOut.
+    END METHOD.
+
+    /* Elements joined with pcDelimiter. Unknown elements become "".
+       Raises an error past the CHARACTER limit; use JoinLong then. */
+    METHOD PUBLIC CHARACTER Join(INPUT pcDelimiter AS CHARACTER):
+        DEFINE VARIABLE cOut AS CHARACTER NO-UNDO.
+        cOut = JoinLong(pcDelimiter).
+        RETURN cOut.
+    END METHOD.
+
+    METHOD PUBLIC LONGCHAR JoinLong(INPUT pcDelimiter AS CHARACTER):
+        DEFINE VARIABLE lcOut AS LONGCHAR  NO-UNDO.
+        DEFINE VARIABLE cItem AS CHARACTER NO-UNDO.
+        DEFINE VARIABLE i     AS INTEGER   NO-UNDO.
+
+        IF pcDelimiter = ? THEN pcDelimiter = "".
+        lcOut = "".
+        DO i = 1 TO iLen:
+            cItem = oStore:GetAt(iStart + i - 1).
+            IF cItem = ? THEN cItem = "".
+            IF i > 1 THEN lcOut = lcOut + pcDelimiter.
+            lcOut = lcOut + cItem.
+        END.
+        RETURN lcOut.
+    END METHOD.
+

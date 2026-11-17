@@ -1,0 +1,17 @@
+    /* ---------------------------------------------------------------- */
+    /* Element comparison and text (scalar types)                       */
+    /* ---------------------------------------------------------------- */
+
+    /* ABL equality: ? equals ?, text ignores case and trailing blanks. */
+    METHOD PRIVATE LOGICAL ItemEquals(INPUT @P@A AS @TYPE@, INPUT @P@B AS @TYPE@):
+        RETURN @P@A = @P@B.
+    END METHOD.
+
+    METHOD PRIVATE CHARACTER ItemText(INPUT @P@A AS @TYPE@):
+        DEFINE VARIABLE cText AS CHARACTER NO-UNDO.
+        IF @P@A = ? THEN RETURN "?".
+        cText = STRING(@P@A).
+        IF LENGTH(cText) > 200 THEN cText = SUBSTRING(cText, 1, 200) + "...".
+        RETURN cText.
+    END METHOD.
+
