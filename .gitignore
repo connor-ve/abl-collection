@@ -1,0 +1,53 @@
+# Compiled ABL
+*.r
+*.pl
+*.xref
+*.lst
+*.dbg
+*.preprocessed
+
+# Build and test output
+build/
+results/
+.pct/
+.builder/
+
+# Runtime leftovers
+*.log
+*.lg
+protrace.*
+procore.*
+*.tmp
+
+# Client temp files (land in the working dir when -T is not set)
+srt*
+lbi*
+dbi*
+rcd*
+
+# Local test databases
+*.db
+*.b1
+*.d1
+*.lk
+*.st
+*.lic
+
+# Local settings and secrets
+*.local.pf
+.env
+.env.*
+
+# Progress Developer Studio / Eclipse
+.metadata/
+.settings/
+RemoteSystemsTempFiles/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
